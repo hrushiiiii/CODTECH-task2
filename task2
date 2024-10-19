@@ -1,0 +1,109 @@
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.grades = {}  # Dictionary to store subject: grade pairs
+    
+    # Add a grade for a subject
+    def add_grade(self, subject, grade):
+        self.grades[subject] = grade
+        print(f"Grade added: {subject} - {grade}")
+    
+    # Calculate average grade
+    def calculate_average(self):
+        if not self.grades:
+            return 0
+        total = sum(self.grades.values())
+        count = len(self.grades)
+        return total / count
+
+    # Display the student's grades and average
+    def display_grades(self):
+        if not self.grades:
+            print(f"{self.name} has no grades yet.")
+        else:
+            print(f"\nGrades for {self.name}:")
+            for subject, grade in self.grades.items():
+                print(f"{subject}: {grade}")
+            average = self.calculate_average()
+            print(f"Average Grade: {average:.2f}")
+            print(f"Performance: {self.get_performance(average)}")
+    
+    # Determine performance based on average grade
+    def get_performance(self, average):
+        if average >= 90:
+            return "Excellent"
+        elif average >= 75:
+            return "Good"
+        elif average >= 60:
+            return "Satisfactory"
+        else:
+            return "Needs Improvement"
+
+class GradeTracker:
+    def __init__(self):
+        self.students = {}  # Dictionary to store student_name: Student object
+
+    # Add a new student
+    def add_student(self, name):
+        if name in self.students:
+            print(f"{name} is already in the system.")
+        else:
+            self.students[name] = Student(name)
+            print(f"Student {name} added.")
+    
+    # Add grade for a student
+    def add_student_grade(self, name, subject, grade):
+        if name in self.students:
+            self.students[name].add_grade(subject, grade)
+        else:
+            print(f"Student {name} not found. Please add the student first.")
+
+    # Display all students and their grades
+    def display_all_students(self):
+        if not self.students:
+            print("No students in the system.")
+        else:
+            for student in self.students.values():
+                student.display_grades()
+
+# Main program
+def main():
+    tracker = GradeTracker()
+
+    while True:
+        print("\nMenu:")
+        print("1. Add Student")
+        print("2. Add Grade for Student")
+        print("3. View All Students and Grades")
+        print("4. Quit")
+
+        choice = input("Choose an option: ")
+
+        if choice == '1':
+            name = input("Enter student name: ")
+            tracker.add_student(name)
+
+        elif choice == '2':
+            name = input("Enter student name: ")
+            subject = input("Enter subject: ")
+            try:
+                grade = float(input("Enter grade: "))
+                if 0 <= grade <= 100:
+                    tracker.add_student_grade(name, subject, grade)
+                else:
+                    print("Invalid grade. Enter a value between 0 and 100.")
+            except ValueError:
+                print("Please enter a valid number for the grade.")
+        
+        elif choice == '3':
+            tracker.display_all_students()
+
+        elif choice == '4':
+            print("Exiting program. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please select a valid option.")
+
+if __name__ == "__main__":
+    main()
